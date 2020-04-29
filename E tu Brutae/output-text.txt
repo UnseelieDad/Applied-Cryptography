@@ -1,0 +1,12 @@
+KEY=dumpster:
+Did you think that your challenge was complete?  Ha!  Of course not.
+
+The following ciphertext (which, by the way, has more than 64 characters  
+was encrypted using the "other" method (you know, the one that you didn't 
+already use to get here .
+
+You may want to know that the alphabet is a bit different:
+
+GHXJ+g5y6Asd3ZB4D12NT8mQEcarbSIo7zwjltOWu9eP/pFVL0KYqx=hRUCkviMf
+
+Good luck!
