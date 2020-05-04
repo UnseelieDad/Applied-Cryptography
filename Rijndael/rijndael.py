@@ -1,5 +1,13 @@
 # Rijndael
-# Sample template to show how to implement AES in Python
+
+# Seth Martin
+# 10252074
+# CSC 444
+# 5/3/2020
+# This program takes ciphertext encoded using the AES algorithm and tries keys using a provided
+# dictionary to generate candidate plaintexts. The plaintexts are compared against a threshold or tag
+# to discover the real plaintext and key that generated it.
+# Written in Python 3.8.2
 
 from sys import stdin, stdout, stderr
 from hashlib import sha256
