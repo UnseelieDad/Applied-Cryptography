@@ -5,7 +5,6 @@ from sys import stdin, stdout, stderr
 from hashlib import sha256
 from Crypto import Random
 from Crypto.Cipher import AES
-import codecs
 
 DECRYPT = True
 ENCRYPT_KEY = ""
@@ -13,21 +12,17 @@ ENCRYPT_KEY = ""
 BLOCK_SIZE = 16
 # the padding character to use to make the plaintext a multiple of BLOCK_SIZE in length
 PAD_WITH = "#"
-# the key to use in the cipher
-KEY = "rijndael"
 # Dictionary to read in
 DICTIONARY = "dictionary1-3.txt"
-# Reverse dictionary processing?
+# Reverse dictionary processing if using ciphertext 5
 REVERSE = False
-# Filter out words in the dictionary?
+# Filter for ciphertext 4 using "J" and "j"
 FILTER = []
-# Search for specfici tags
+# Search for specfici tags, use for ciphertext 5
 TAG = "%PDF-1.4"
 USE_TAG = False
 # Threshold for english words in plaintext
 THRESHOLD = 0.75
-# Minimum length for english words
-MIN_WORD_LENGTH = 4
 # Symbols to strip from words during normalization
 SYMBOLS = "`~!@#$%^&*()-=_+{}[]\|:;\"<>,.?/"
 
@@ -107,25 +102,51 @@ def normalize(text_list):
 
 # read in dictionary
 dict_file = open(DICTIONARY, "r")
-dictionary = dict_file.read().rstrip("\n")
+dictionary = dict_file.read().rstrip("\n").split("\n")
 dict_file.close()
-dictionary = dictionary.split("\n")
+# strip punctuation and make all words lowercase for comparison
 norm_dict = normalize(dictionary)
+
+# If filter is active the potential keys are the filtered words from the dictionaty
+# else just search the whole dictionary
+potential_keys = []
+for word in dictionary:
+	if len(FILTER) > 0:
+		if word[0] in FILTER:
+			potential_keys.append(word)
+	else:
+		potential_keys = dictionary
+
+if REVERSE:
+    potential_keys.reverse()
 
 ciphertext = stdin.read().rstrip("\n")
 
-for key in dictionary:
+for key in potential_keys:
     
 	plaintext = decrypt(ciphertext, key)
-	# Turn plain text into a normalized list of words to compare to the dictionary
-	plain_list = normalize(plaintext.split("\n"))
+	
+	# If searching for a tag the correct plaintext is the one with the tag.
+	if USE_TAG:
+		plain_list = plaintext.split("\n")
+		for text in plain_list:
+			if text == TAG:
+				stderr.write("KEY={}\n".format(key))
+				print plaintext
+				exit(0)
 
-	# compare words in plain text to words in dictionary and count the matches
-	match_count = 0.0
-	for word in plain_list:
-		if word in norm_dict:
-			match_count += 1
+	else:
+		# Turn plain text into a normalized list of words to compare to the dictionary
+		plain_list = normalize(plaintext.split("\n"))
 
-	if match_count/len(plain_list) >= THRESHOLD:
-		stderr.write("KEY={}\n".format(key))
-		print plaintext
+		# compare words in plain text to words in dictionary and count the matches
+		match_count = 0.0
+		for word in plain_list:
+			if word in norm_dict:
+				match_count += 1
+
+		# if match ratio is greater than the threshold print as chosen plaintext
+		if match_count/len(plain_list) >= THRESHOLD:
+			stderr.write("KEY={}\n".format(key))
+			print plaintext
+			exit(0)
