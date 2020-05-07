@@ -13,6 +13,7 @@ from sys import stdin, stdout, stderr
 from hashlib import sha256
 from Crypto import Random
 from Crypto.Cipher import AES
+import re
 
 DECRYPT = True
 ENCRYPT_KEY = ""
@@ -33,6 +34,8 @@ USE_TAG = False
 THRESHOLD = 0.75
 # Symbols to strip from words during normalization
 SYMBOLS = "`~!@#$%^&*()-=_+{}[]\|:;\"<>,.?/"
+# Search for RGB values
+RGB = False
 
 # decrypts a ciphertext with a key
 def decrypt(ciphertext, key):
@@ -108,6 +111,10 @@ def normalize(text_list):
 
 # MAIN
 
+if RGB:
+    pattern = re.compile("\([^\)]*\)")
+
+
 # read in dictionary
 dict_file = open(DICTIONARY, "r")
 dictionary = dict_file.read().rstrip("\n").split("\n")
@@ -142,6 +149,15 @@ for key in potential_keys:
 				stderr.write("KEY={}\n".format(key))
 				print plaintext
 				exit(0)
+
+	if RGB:
+		plain_list = plaintext.split("\n")
+		for text in plain_list:
+			if pattern.match(text):
+				print("KEY={}".format(key))
+				print plaintext
+		exit(0)
+
 
 	else:
 		# Turn plain text into a normalized list of words to compare to the dictionary

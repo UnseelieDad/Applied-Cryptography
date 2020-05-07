@@ -11,14 +11,33 @@
 
 from PIL import Image
 from random import randint
-from sys import stdout, stderr
+from sys import stdout, stderr, stdin
 from sys import argv
 
+
+DECRYPT = True
+SYMBOLS = "(),"
+
 # the images
-INPUT_IMAGE = "input.png"
+INPUT_IMAGE = "xor.png"
 AND_IMAGE = "and.png"
 OR_IMAGE = "or.png"
 XOR_IMAGE = "xor.png"
+ENCRYPTED_IMAGE = "view-me.png"
+DECRYPTED_IMAGE = "view-me-decrypted.png"
+
+def strip_characters(rgb_list):
+    new_list = []
+
+    for value in rgb_list:
+        new_value = value.strip(" ")
+        for character in new_value:
+            if character in SYMBOLS:
+                new_value = new_value.replace(character, "")
+        
+        new_list.append(new_value)
+
+    return new_list
 
 # get the input image
 img = Image.open(INPUT_IMAGE)
@@ -26,45 +45,72 @@ pixels = img.load()
 rows, cols = img.size
 stderr.write("[input.png is loaded]\n")
 
-# Create and load the pixels for each new image
-and_img = Image.new('RGB', (rows, cols))
-or_img = Image.new('RGB', (rows, cols))
-xor_img = Image.new('RGB', (rows, cols))
+if DECRYPT:
 
-and_pixels = and_img.load()
-or_pixels = or_img.load()
-xor_pixels = xor_img.load()
+    decrypted_img = Image.new("RGB", (rows, cols))
+    decrypted_pixels = decrypted_img.load()
 
-# for each pixel
-row = 0
-while row < rows:
-    col = 0
-    while col < cols:
-        # Generate a random key in RGB format
-        key = (randint(0,255), randint(0,255), randint(0,255))
-        stdout.write(f"{str(key)}\n")
-        stdout.flush()
+    keys = stdin.read().rstrip("\n").split("\n")
+    key_index = 0
+    row = 0
+    while row < rows:
+        col = 0
+        while col < cols:
+            key = keys[key_index]
+            key = key.split(",")
+            key = strip_characters(key)
+            
+            r, g, b = pixels[row, col]
+            decrypted_pixels[row, col] = ((r ^ int(key[0])), (g ^ int(key[1])), (b ^ int(key[2])))
 
-        r, g, b = pixels[row, col]
-        # and
-        and_pixels[row, col] = ((r & key[0]), (g & key[1]), (b & key[2]))
-        # or
-        or_pixels[row, col] = ((r | key[0]), (g | key[1]), (b | key[2]))
-        # xor
-        xor_pixels[row, col] = ((r ^ key[0]), (g ^ key[1]), (b ^ key[2]))
+            col += 1
+            key_index += 1
+        
+        row += 1
 
-        col += 1
-    
-    row += 1
+    decrypted_img.save(DECRYPTED_IMAGE)
 
-# write new image
-and_img.save(AND_IMAGE)
-or_img.save(OR_IMAGE)
-xor_img.save(XOR_IMAGE)
+else:
+
+    # Create and load the pixels for each new image
+    and_img = Image.new('RGB', (rows, cols))
+    or_img = Image.new('RGB', (rows, cols))
+    xor_img = Image.new('RGB', (rows, cols))
+
+    and_pixels = and_img.load()
+    or_pixels = or_img.load()
+    xor_pixels = xor_img.load()
+
+    # for each pixel
+    row = 0
+    while row < rows:
+        col = 0
+        while col < cols:
+            # Generate a random key in RGB format
+            key = (randint(0,255), randint(0,255), randint(0,255))
+            stdout.write(f"{str(key)}\n")
+            stdout.flush()
+
+            r, g, b = pixels[row, col]
+            # and
+            and_pixels[row, col] = ((r & key[0]), (g & key[1]), (b & key[2]))
+            # or
+            or_pixels[row, col] = ((r | key[0]), (g | key[1]), (b | key[2]))
+            # xor
+            xor_pixels[row, col] = ((r ^ key[0]), (g ^ key[1]), (b ^ key[2]))
+
+            col += 1
+        
+        row += 1
+
+    # write new image
+    and_img.save(AND_IMAGE)
+    or_img.save(OR_IMAGE)
+    xor_img.save(XOR_IMAGE)
 
 
 
-stderr.write("[and.png, or.png, xor.png are all stored]\n")
-# If stdout is redirected to a file instead of a terminal
-if not stdout.isatty():
-    stderr.write("[the key is stored to the specified file]\n")
+    stderr.write("[and.png, or.png, xor.png are all stored]\n")
+    # If stdout is redirected to a file instead of a terminal
+    if not stdout.isatty():
+        stderr.write("[the key is stored to the specified file]\n")
