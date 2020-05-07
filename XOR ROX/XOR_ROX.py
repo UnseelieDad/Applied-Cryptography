@@ -26,6 +26,7 @@ XOR_IMAGE = "xor.png"
 ENCRYPTED_IMAGE = "view-me.png"
 DECRYPTED_IMAGE = "view-me-decrypted.png"
 
+# strip parentheses, commas, and spaces from rgb values read from input
 def strip_characters(rgb_list):
     new_list = []
 
@@ -47,19 +48,27 @@ stderr.write("[input.png is loaded]\n")
 
 if DECRYPT:
 
+    # setup decrypted image
     decrypted_img = Image.new("RGB", (rows, cols))
     decrypted_pixels = decrypted_img.load()
 
+    # read key from stdin
     keys = stdin.read().rstrip("\n").split("\n")
     key_index = 0
+    
+    # For each pixel in the encrypted image
     row = 0
     while row < rows:
         col = 0
+        
         while col < cols:
+            # get the rgb key at the index corresponding to the current pixel
             key = keys[key_index]
+            # format the key so it's just a list of values
             key = key.split(",")
             key = strip_characters(key)
-            
+
+            # xor the the rgb values of the current pixel with the key values
             r, g, b = pixels[row, col]
             decrypted_pixels[row, col] = ((r ^ int(key[0])), (g ^ int(key[1])), (b ^ int(key[2])))
 
