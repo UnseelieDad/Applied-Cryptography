@@ -22,20 +22,20 @@ BLOCK_SIZE = 16
 # the padding character to use to make the plaintext a multiple of BLOCK_SIZE in length
 PAD_WITH = "#"
 # Dictionary to read in
-DICTIONARY = "dictionary1-3.txt"
+DICTIONARY = "dictionary.txt"
 # Reverse dictionary processing if using ciphertext 5
 REVERSE = False
 # Filter for ciphertext 4 using "J" and "j"
-FILTER = []
+FILTER = ["p", "P"]
 # Search for specfici tags, use for ciphertext 5
 TAG = "%PDF-1.4"
 USE_TAG = False
 # Threshold for english words in plaintext
-THRESHOLD = 0.75
+THRESHOLD = 0.10
 # Symbols to strip from words during normalization
 SYMBOLS = "`~!@#$%^&*()-=_+{}[]\|:;\"<>,.?/"
 # Search for RGB values
-RGB = False
+RGB = True
 
 # decrypts a ciphertext with a key
 def decrypt(ciphertext, key):
@@ -112,7 +112,7 @@ def normalize(text_list):
 # MAIN
 
 if RGB:
-    pattern = re.compile("\([^\)]*\)")
+    pattern = re.compile("([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])[,\s]\s*([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])[,\s]\s*([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])")
 
 
 # read in dictionary
@@ -137,6 +137,8 @@ if REVERSE:
 
 ciphertext = stdin.read().rstrip("\n")
 
+print potential_keys
+
 for key in potential_keys:
     
 	plaintext = decrypt(ciphertext, key)
@@ -150,13 +152,13 @@ for key in potential_keys:
 				print plaintext
 				exit(0)
 
-	if RGB:
+	elif RGB:
 		plain_list = plaintext.split("\n")
 		for text in plain_list:
 			if pattern.match(text):
 				print("KEY={}".format(key))
 				print plaintext
-		exit(0)
+				exit(0)
 
 
 	else:
@@ -171,6 +173,7 @@ for key in potential_keys:
 
 		# if match ratio is greater than the threshold print as chosen plaintext
 		if match_count/len(plain_list) >= THRESHOLD:
-			stderr.write("KEY={}\n".format(key))
+			#stderr.write("KEY={}\n".format(key))
+			print "KEY={}".format(key)
 			print plaintext
-			exit(0)
+			#exit(0)

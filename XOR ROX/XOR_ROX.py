@@ -19,7 +19,7 @@ DECRYPT = True
 SYMBOLS = "(),"
 
 # the images
-INPUT_IMAGE = "xor.png"
+INPUT_IMAGE = "view-me.png"
 AND_IMAGE = "and.png"
 OR_IMAGE = "or.png"
 XOR_IMAGE = "xor.png"
@@ -64,10 +64,10 @@ if DECRYPT:
         while col < cols:
             # get the rgb key at the index corresponding to the current pixel
             key = keys[key_index]
+            
             # format the key so it's just a list of values
             key = key.split(",")
             key = strip_characters(key)
-
             # xor the the rgb values of the current pixel with the key values
             r, g, b = pixels[row, col]
             decrypted_pixels[row, col] = ((r ^ int(key[0])), (g ^ int(key[1])), (b ^ int(key[2])))
