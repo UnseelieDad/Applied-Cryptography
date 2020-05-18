@@ -1,56 +1,39 @@
-#Binary Decoder
-import sys
 
-ALPHABET = "abcdefghijklmnopqrstuvwxyz"
-
-def decode(grouping,binaryString):
-    #detect if it is an 8 bit or 7 bit
-    #split the string into groups of "grouping", put data in an array
-    #initialize a string array
-    binaryString = binaryString.replace(" ", "")
-    groupings = []
-    i = 0
-    currentBinaryString = ""
-    for char in binaryString:
-        if (i != 0 and i % grouping == 0):
-            groupings.append(currentBinaryString)
-            currentBinaryString = char
-        elif (i == len(binaryString)-1):
-            currentBinaryString += char
-            groupings.append(currentBinaryString)
-        else:
-            currentBinaryString += char
-        i += 1
-    #convert each grouping into a character
-    decodedMessage = ""
-    for binaryGrouping in groupings:
-        n = int(binaryGrouping,2)
-        if (n == 8):
-            decodedMessage = decodedMessage[:len(decodedMessage)-1]
-        if (n!=8 and n>0 and n<128):
-            decodedMessage += chr(n)
-    #return the resulting string
-    return decodedMessage
-
-#main
-
-encode_text = sys.stdin.read().rstrip("\n")
-
-candidate_text = decode(8, encode_text)
-
-# Loop decoding until it finds letters
-while True:
-    for char in candidate_text:
-        if char in ALPHABET or char in ALPHABET.upper():
-            print(candidate_text)
-            exit(0)
-    
-    candidate_text = decode(8, candidate_text)
-    
-
-
-# for line in sys.stdin:
-#     # sys.stdout.write(decode(7,line))
-#     # sys.stdout.write("\n")
-#     sys.stdout.write(decode(8,line))
-#     sys.stdout.write("\n")
+from sys import stdin
+   
+def BinaryToDecimal(binary): 
+      
+    string = int(binary, 2) 
+      
+    return string 
+      
+bin_data = stdin.read().rstrip("\n")
+   
+# print binary data 
+#print("The binary value is:", bin_data) 
+   
+# initializing a empty string for  
+# storing the string data 
+str_data =' '
+   
+# slicing the input and converting it  
+# in decimal and then converting it in string 
+for i in range(0, len(bin_data), 7): 
+      
+    # slicing the bin_data from index range [0, 6] 
+    # and storing it in temp_data 
+    temp_data = bin_data[i:i + 7] 
+       
+    # passing temp_data in BinarytoDecimal() fuction 
+    # to get decimal value of corresponding temp_data 
+    decimal_data = BinaryToDecimal(temp_data) 
+       
+    # Deccoding the decimal value returned by  
+    # BinarytoDecimal() function, using chr()  
+    # function which return the string corresponding  
+    # character for given ASCII value, and store it  
+    # in str_data 
+    str_data = str_data + chr(decimal_data)  
+  
+# printing the result 
+print(str_data) 

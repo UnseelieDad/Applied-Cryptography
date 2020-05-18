@@ -1,5 +1,6 @@
 from sys import stdin
-from base64 import b64decode
+import base64
 
 encoded_text = stdin.read().rstrip("\n")
-print(b64decode(encoded_text).decode("utf-8"))
+#encoded_text += "=" * ((4 - len(encoded_text) % 4) % 4)
+print(base64.decodebytes(encoded_text.encode("ascii")).decode("ascii"))
