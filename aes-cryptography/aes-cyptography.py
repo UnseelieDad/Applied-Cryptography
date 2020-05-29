@@ -22,7 +22,7 @@ BLOCK_SIZE = 16
 # the padding character to use to make the plaintext a multiple of BLOCK_SIZE in length
 PAD_WITH = "#"
 # Dictionary to read in
-DICTIONARY = "dictionary.txt"
+DICTIONARY = "dictionary1-3.txt"
 # Reverse dictionary processing if using ciphertext 5
 REVERSE = False
 # Filter for ciphertext 4 using "J" and "j"
@@ -35,7 +35,7 @@ THRESHOLD = 0.10
 # Symbols to strip from words during normalization
 SYMBOLS = "`~!@#$%^&*()-=_+{}[]\|:;\"<>,.?/"
 # Search for RGB values
-RGB = True
+RGB = False
 
 # decrypts a ciphertext with a key
 def decrypt(ciphertext, key):

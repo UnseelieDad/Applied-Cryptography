@@ -12,20 +12,16 @@ import base64
 import binascii
 
 # the alphabet
-#ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-_=+[{]}\|;:'\",<.>/? "
+ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-_=+[{]}\|;:'\",<.>/? "
 
 # Alternate alphabet for third cipher
 #ALPHABET = " -,;:!?/.'\"()[]$&#%012345789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxyYzZ"
-
-#ALPHABET = "GHXJ+g5y6Asd3ZB4D12NT8mQEcarbSIo7zwjltOWu9eP/pFVL0KYqx=hRUCkviMf"
-
-ALPHABET = "1234567890"
 
 SYMBOLS = ".?,\"!()"
 
 THRESHOLD = 75
 
-DECRYPT = False
+DECRYPT = True
 
 # get words from the dictioanry
 file = open("dictionary.txt", "r")
@@ -134,8 +130,6 @@ if DECRYPT is True:
     # Compare words in candidates to words in dictionary
 
     for candidate in candidates:
-        if candidate[1] == 27:
-            print(candidate[0])
 
         # Get text from candidate and split it by spaces into words
         text = candidate[0]

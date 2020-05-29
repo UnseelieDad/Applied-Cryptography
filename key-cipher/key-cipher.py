@@ -27,7 +27,7 @@ THRESHOLD = 0.5
 # To search the list of keys in reverse for cipher 3
 REVERSE_KEYS = False
 
-DECRYPT = False
+DECRYPT = True
 ENCRYPT_KEY = "27"
 
 # This function decrypts a key cipher given the cipher-text and a key
@@ -157,7 +157,7 @@ if DECRYPT is True:
     # if a word has all unqiue characters then it is a potential key
     potential_keys = []
     for word in dictionary:
-        if unique_characters(word) and in_alphabet(word) and word[0] == ALPHABET[40]:
+        if unique_characters(word) and in_alphabet(word):
             potential_keys.append(word)
 
     

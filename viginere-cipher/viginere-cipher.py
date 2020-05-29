@@ -15,10 +15,10 @@ DECRYPT = True
 ENCRYPT_KEY = ""
 
 # the alphabet
-#ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-_=+[{]}\|;:'\",<.>/? "
+ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`~!@#$%^&*()-_=+[{]}\|;:'\",<.>/? "
 # Alphabet for cipher-text 3 and 4
 #ALPHABET = " -,;:!?/.'\"()[]$&#%012345789aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxyYzZ"
-ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ,.0123456789"
+#ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ,.0123456789"
 
 SYMBOLS = "`~!@#$%^&*()-=_+{}[]\|:;\"<>,.?/"
 
@@ -144,9 +144,6 @@ if DECRYPT is True:
         else:
             plain_text = decrypt(cipher_text, key)
             test_lines = False
-
-        print(plain_text)
-        exit(0)
 
         # Turn plain text into a normalized list of words to compare to the dictionary
         plain_list = normalize(plain_text.split("\n"))

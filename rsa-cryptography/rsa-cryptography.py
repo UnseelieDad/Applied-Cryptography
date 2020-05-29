@@ -9,9 +9,6 @@
 # By trying each generated value of e until the plaintext is found.
 # Written in Python 3.7.5
 
-# Rivets Arm His Lama Den is an anagram of the name of the thre researches who
-# created RSA:
-# Rivest, Shamir, and Adleman
 
 from sys import stdin, stdout
 
